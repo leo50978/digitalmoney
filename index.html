@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Money - Gagnez de l'argent en ligne</title>
+    
+    <!-- CDN Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CDN Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CDN Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- CDN Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <!-- Configuration Tailwind personnalisée -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        },
+                        secondary: {
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                        'heading': ['Poppins', 'Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'pulse-subtle': 'pulse 2s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Styles CSS personnalisés */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .content-hidden {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s;
+        }
+        
+        .content-visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 50%, #60a5fa 100%);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(16, 185, 129, 0.9) 100%);
+        }
+        
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .menu-open {
+            max-height: 500px;
+            opacity: 1;
+            transition: max-height 0.5s ease, opacity 0.3s ease;
+        }
+        
+        .menu-closed {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    
+    <!-- Splash Screen (disparaît après 3 secondes) -->
+    <div id="splashScreen" class="splash-screen gradient-bg">
+        <div class="text-center text-white px-6">
+            <!-- Logo placeholder avec style moderne -->
+            <div class="mb-8 flex justify-center">
+                <div class="w-24 h-24 bg-white rounded-2xl flex items-center justify-center shadow-xl">
+ <img src="digitallogo.png" alt="Welcome" class="full-img">           
+                </div>
+            </div>
+            
+            <h1 class="text-3xl md:text-4xl font-bold mb-4 font-heading">Digital Money</h1>
+            <p class="text-xl md:text-2xl font-light mb-6">Votre avenir financier commence ici</p>
+            <div class="w-24 h-1 bg-white mx-auto rounded-full"></div>
+            <p class="mt-8 text-lg max-w-md mx-auto opacity-90">Plateforme de revenus en ligne • Marketing d'affiliation • Formations digitales</p>
+        </div>
+    </div>
+    
+    <!-- Contenu principal du site (caché au début) -->
+    <div id="mainContent" class="content-hidden">
+        
+        <!-- Header avec navigation responsive -->
+        <header class="sticky top-0 z-50 bg-white shadow-md">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex justify-between items-center">
+                    <!-- Logo -->
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3">
+ <img src="digitallogo.png" alt="Welcome" class="full-img" style="scale: 1.5;">                          
+                        </div>
+                        <span class="text-2xl font-bold text-blue-700 font-heading"></span>
+                    </div>
+                    
+                    <!-- Menu desktop -->
+                    <nav class="hidden md:flex space-x-8">
+                        <a href="#accueil" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Accueil</a>
+                        <a href="#services" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Services</a>
+                        <a href="#formations" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Formations</a>
+                        <a href="#coaching" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Coaching</a>
+                        <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Contact</a>
+                    </nav>
+                    
+                    <!-- Bouton CTA desktop -->
+                    <div class="hidden md:block">
+                        <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md hover:shadow-lg">
+                            Commencer maintenant
+                        </a>
+                    </div>
+                    
+                    <!-- Menu burger mobile -->
+                    <button id="menuToggle" class="md:hidden text-gray-700 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+                
+                <!-- Menu mobile (caché par défaut) -->
+                <div id="mobileMenu" class="menu-closed md:hidden mt-4">
+                    <div class="flex flex-col space-y-4 pb-4">
+                        <a href="#accueil" class="text-gray-700 hover:text-blue-600 font-medium py-2">Accueil</a>
+                        <a href="#services" class="text-gray-700 hover:text-blue-600 font-medium py-2">Services</a>
+                        <a href="#formations" class="text-gray-700 hover:text-blue-600 font-medium py-2">Formations</a>
+                        <a href="#coaching" class="text-gray-700 hover:text-blue-600 font-medium py-2">Coaching</a>
+                        <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium py-2">Contact</a>
+                        <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium text-center transition duration-300 mt-2">
+                            Commencer maintenant
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Section Hero -->
+        <section id="accueil" class="hero-gradient text-white py-16 md:py-24">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 mb-12 md:mb-0">
+                        <h1 class="text-4xl md:text-5xl font-bold mb-6 font-heading animate-fade-in">
+                            Gagnez de l'argent en ligne depuis votre maison
+                        </h1>
+                        <p class="text-xl mb-8 opacity-90 animate-slide-up">
+                            Digital Money vous guide pas à pas pour créer des revenus passifs grâce au marketing d'affiliation, aux eBooks et aux formations digitales. Travaillez où vous voulez, quand vous voulez.
+                        </p>
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 animate-slide-up">
+                            <a href="#services" class="bg-white text-blue-700 hover:bg-gray-100 px-8 py-4 rounded-lg font-bold text-lg text-center transition duration-300 shadow-lg">
+                                Découvrir nos services
+                            </a>
+                            <a href="#contact" class="bg-transparent border-2 border-white hover:bg-white hover:text-blue-700 px-8 py-4 rounded-lg font-bold text-lg text-center transition duration-300">
+                                Contactez-nous
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 flex justify-center">
+                        <!-- Placeholder pour image/vidéo -->
+                        <div class="relative w-full max-w-lg">
+                            <div class="bg-white rounded-2xl shadow-2xl p-2 transform rotate-3">
+                                <div class="bg-gradient-to-r from-blue-500 to-green-400 h-64 rounded-xl flex items-center justify-center">
+ <img src="illustration-removebg-preview.png" alt="Welcome" class="full-img" style="scale: 1.5;">                          
+                                </div>
+                            </div>
+                            <div class="absolute -bottom-6 -left-6 bg-white rounded-xl transform -rotate-6">
+                              
+                               
+                               
+                                   
+                          
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section Services -->
+        <section id="services" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 font-heading text-gray-800">Nos Services pour Vous</h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">Découvrez comment Digital Money peut transformer votre vie financière avec ces services adaptés au marché Haïtien et international.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Service 1 -->
+                    <div class="bg-gray-50 rounded-2xl p-8 card-hover border border-gray-100">
+                        <div class="bg-blue-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-users text-blue-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Marketing d'Affiliation</h3>
+                        <p class="text-gray-600 mb-6">Apprenez à générer des commissions en promouvant des produits et services en ligne. Nous vous formons aux meilleures techniques adaptées au marché local et international.</p>
+                        <ul class="mb-6 space-y-2">
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                <span>Formation complète pas à pas</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                <span>Accès à des plateformes exclusives</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                <span>Support continu et communauté</span>
+                            </li>
+                        </ul>
+                        <a href="#contact" class="inline-block text-blue-600 font-semibold hover:text-blue-800">
+                            En savoir plus <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- Service 2 -->
+                    <div class="bg-gray-50 rounded-2xl p-8 card-hover border border-gray-100">
+                        <div class="bg-green-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-book-open text-green-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">eBooks & Formations</h3>
+                        <p class="text-gray-600 mb-6">Accédez à notre bibliothèque d'eBooks et formations sur le marketing digital, la création de contenu et la gestion financière. Des ressources pratiques pour développer vos compétences.</p>
+                        <ul class="mb-6 space-y-2">
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                <span>eBooks téléchargeables</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                <span>Formations vidéo complètes</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                <span>Mises à jour régulières</span>
+                            </li>
+                        </ul>
+                        <a href="#formations" class="inline-block text-blue-600 font-semibold hover:text-blue-800">
+                            Voir les formations <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- Service 3 -->
+                    <div class="bg-gray-50 rounded-2xl p-8 card-hover border border-gray-100">
+                        <div class="bg-purple-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-chalkboard-teacher text-purple-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Séances de Coaching</h3>
+                        <p class="text-gray-600 mb-6">Bénéficiez d'un accompagnement personnalisé pour atteindre vos objectifs financiers. Nos coachs experts vous guident dans la mise en place de votre stratégie en ligne.</p>
+                        <ul class="mb-6 space-y-2">
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                <span>Séances individuelles ou en groupe</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                <span>Analyse de votre progression</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                <span>Stratégies adaptées à votre profil</span>
+                            </li>
+                        </ul>
+                        <a href="#coaching" class="inline-block text-blue-600 font-semibold hover:text-blue-800">
+                            Réserver une séance <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section Formations -->
+        <section id="formations" class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 font-heading text-gray-800">Nos Formations Populaires</h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">Des formations complètes et accessibles pour développer vos compétences et générer des revenus en ligne.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Formation 1 -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+                        <div class="bg-blue-500 h-3"></div>
+                        <div class="p-8">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-xl font-bold text-gray-800">Marketing d'Affiliation Débutant</h3>
+                                <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">Populaire</span>
+                            </div>
+                            <p class="text-gray-600 mb-6">Apprenez les bases du marketing d'affiliation et commencez à générer vos premiers revenus en ligne.</p>
+                            <div class="mb-6">
+                                <span class="text-3xl font-bold text-gray-800">$49</span>
+                                <span class="text-gray-500">/ formation complète</span>
+                            </div>
+                            <a href="#contact" class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-3 rounded-lg font-medium transition duration-300">
+                                Acheter maintenant
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Formation 2 -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+                        <div class="bg-green-500 h-3"></div>
+                        <div class="p-8">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Création d'eBooks à Vendre</h3>
+                            <p class="text-gray-600 mb-6">Découvrez comment créer, publier et vendre vos propres eBooks sur différentes plateformes.</p>
+                            <div class="mb-6">
+                                <span class="text-3xl font-bold text-gray-800">$39</span>
+                                <span class="text-gray-500">/ formation complète</span>
+                            </div>
+                            <a href="#contact" class="block w-full bg-green-600 hover:bg-green-700 text-white text-center py-3 rounded-lg font-medium transition duration-300">
+                                Acheter maintenant
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Formation 3 -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+                        <div class="bg-purple-500 h-3"></div>
+                        <div class="p-8">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Réseaux Sociaux pour Vendre</h3>
+                            <p class="text-gray-600 mb-6">Maîtrisez les réseaux sociaux pour promouvoir vos produits et services efficacement.</p>
+                            <div class="mb-6">
+                                <span class="text-3xl font-bold text-gray-800">$59</span>
+                                <span class="text-gray-500">/ formation complète</span>
+                            </div>
+                            <a href="#contact" class="block w-full bg-purple-600 hover:bg-purple-700 text-white text-center py-3 rounded-lg font-medium transition duration-300">
+                                Acheter maintenant
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Formation 4 -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+                        <div class="bg-yellow-500 h-3"></div>
+                        <div class="p-8">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Pack Complet Digital Money</h3>
+                            <p class="text-gray-600 mb-6">Accédez à toutes nos formations avec un accompagnement personnalisé et des ressources exclusives.</p>
+                            <div class="mb-6">
+                                <span class="text-3xl font-bold text-gray-800">$129</span>
+                                <span class="text-gray-500">/ pack complet</span>
+                            </div>
+                            <a href="#contact" class="block w-full bg-yellow-600 hover:bg-yellow-700 text-white text-center py-3 rounded-lg font-medium transition duration-300">
+                                Acheter maintenant
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-16">
+                    <p class="text-gray-600 mb-8">Toutes nos formations incluent un accès à vie, des mises à jour gratuites et un support en français.</p>
+                    <a href="#contact" class="inline-flex items-center bg-gray-800 hover:bg-black text-white px-8 py-4 rounded-lg font-bold text-lg transition duration-300 shadow-lg">
+                        <i class="fas fa-graduation-cap mr-3"></i> Voir toutes les formations
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section Coaching -->
+        <section id="coaching" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col lg:flex-row items-center">
+                    <div class="lg:w-1/2 mb-12 lg:mb-0">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-6 font-heading text-gray-800">Coaching Personnalisé pour Votre Succès</h2>
+                        <p class="text-xl text-gray-600 mb-8">
+                            Nos séances de coaching vous offrent un accompagnement sur mesure pour maximiser vos résultats. Que vous soyez débutant ou déjà expérimenté, nous adaptons notre approche à vos besoins spécifiques.
+                        </p>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="bg-blue-100 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-user-check text-blue-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-800 mb-1">Analyse Personnalisée</h3>
+                                    <p class="text-gray-600">Nous évaluons votre situation actuelle et définissons ensemble vos objectifs financiers.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="bg-green-100 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-road text-green-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-800 mb-1">Plan d'Action Concret</h3>
+                                    <p class="text-gray-600">Nous élaborons une stratégie étape par étape adaptée à votre profil et à vos ressources.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="bg-purple-100 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-chart-bar text-purple-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-800 mb-1">Suivi des Résultats</h3>
+                                    <p class="text-gray-600">Nous analysons régulièrement vos progrès et ajustons la stratégie si nécessaire.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-10">
+                            <a href="#contact" class="inline-flex items-center bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600 text-white px-8 py-4 rounded-lg font-bold text-lg transition duration-300 shadow-lg">
+                                <i class="fas fa-calendar-check mr-3"></i> Réserver une séance de coaching
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:w-1/2 lg:pl-16">
+                        <!-- Placeholder pour image/vidéo coaching -->
+                        <div class="bg-gradient-to-br from-blue-50 to-green-50 rounded-2xl p-8 shadow-xl">
+                            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                                <h3 class="text-xl font-bold text-gray-800 mb-4">Témoignage Client</h3>
+                                <div class="flex items-start mb-4">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                                        <i class="fas fa-user text-blue-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-gray-800">Jean-Pierre L.</p>
+                                        <p class="text-gray-600 text-sm">Participant au coaching, Haïti</p>
+                                    </div>
+                                </div>
+                                <p class="text-gray-700 italic">
+                                    "Grâce au coaching Digital Money, j'ai pu générer mes premiers revenus en ligne en seulement 3 mois. L'accompagnement personnalisé m'a permis d'éviter les erreurs courantes et de me concentrer sur ce qui fonctionne vraiment."
+                                </p>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-6">
+                                <div class="bg-white rounded-xl p-6 text-center shadow-md">
+                                    <div class="text-3xl font-bold text-blue-600 mb-2">95%</div>
+                                    <p class="text-gray-700 font-medium">Satisfaction clients</p>
+                                </div>
+                                <div class="bg-white rounded-xl p-6 text-center shadow-md">
+                                    <div class="text-3xl font-bold text-green-600 mb-2">+40%</div>
+                                    <p class="text-gray-700 font-medium">Augmentation revenus moyen</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section Contact -->
+        <section id="contact" class="py-16 md:py-24 bg-gray-800 text-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 font-heading">Contactez Digital Money</h2>
+                    <p class="text-xl text-gray-300 max-w-3xl mx-auto">Prêt à transformer votre vie financière? Contactez-nous pour discuter de vos objectifs et découvrir comment nous pouvons vous aider.</p>
+                </div>
+                
+                <div class="flex flex-col lg:flex-row">
+                    <div class="lg:w-1/2 mb-12 lg:mb-0 lg:pr-12">
+                        <div class="bg-gray-900 rounded-2xl p-8 shadow-xl">
+                            <h3 class="text-2xl font-bold mb-6 font-heading">Informations de Contact</h3>
+                            
+                            <div class="space-y-6">
+                                <div class="flex items-start">
+                                    <div class="bg-blue-600 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-envelope text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-lg font-bold mb-1">Email</h4>
+                                        <a href="mailto:marlinep39@gmail.com" class="text-gray-300 hover:text-white transition duration-300">marlinep39@gmail.com</a>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-green-600 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-phone text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-lg font-bold mb-1">Téléphone</h4>
+                                        <a href="tel:+50941382430" class="text-gray-300 hover:text-white transition duration-300">+509 4138 2430</a>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-purple-600 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-map-marker-alt text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-lg font-bold mb-1">Adresse</h4>
+                                        <p class="text-gray-300">Haïti</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-10 pt-8 border-t border-gray-700">
+                                <h4 class="text-xl font-bold mb-4">Suivez-nous</h4>
+                                <div class="flex space-x-4">
+                                    <a href="#" class="bg-gray-700 hover:bg-blue-600 w-12 h-12 rounded-full flex items-center justify-center transition duration-300">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="#" class="bg-gray-700 hover:bg-blue-400 w-12 h-12 rounded-full flex items-center justify-center transition duration-300">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                    <a href="#" class="bg-gray-700 hover:bg-pink-600 w-12 h-12 rounded-full flex items-center justify-center transition duration-300">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="#" class="bg-gray-700 hover:bg-blue-700 w-12 h-12 rounded-full flex items-center justify-center transition duration-300">
+                                        <i class="fab fa-linkedin-in"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:w-1/2">
+                        <div class="bg-gray-900 rounded-2xl p-8 shadow-xl">
+                            <h3 class="text-2xl font-bold mb-6 font-heading">Envoyez-nous un message</h3>
+                            <form id="contactForm">
+                                <div class="mb-6">
+                                    <label for="name" class="block text-gray-300 mb-2">Nom complet</label>
+                                    <input type="text" id="name" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="Votre nom">
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <label for="email" class="block text-gray-300 mb-2">Adresse email</label>
+                                    <input type="email" id="email" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="votre@email.com">
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <label for="service" class="block text-gray-300 mb-2">Service intéressé</label>
+                                    <select id="service" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                                        <option value="">Sélectionnez un service</option>
+                                        <option value="affiliation">Marketing d'affiliation</option>
+                                        <option value="ebooks">eBooks & Formations</option>
+                                        <option value="coaching">Séances de coaching</option>
+                                        <option value="pack">Pack complet</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <label for="message" class="block text-gray-300 mb-2">Message</label>
+                                    <textarea id="message" rows="5" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="Décrivez vos objectifs et questions..."></textarea>
+                                </div>
+                                
+                                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600 text-white font-bold py-4 rounded-lg transition duration-300 shadow-lg">
+                                    Envoyer le message
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white py-12">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-8 md:mb-0">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                                <span class="text-white font-bold text-xl">DM</span>
+                            </div>
+                            <span class="text-2xl font-bold font-heading">Digital Money</span>
+                        </div>
+                        <p class="text-gray-400 max-w-md">Plateforme d'éducation financière et de développement de revenus en ligne pour les Haïtiens et francophones du monde entier.</p>
+                    </div>
+                    
+                    <div class="text-center md:text-right">
+                        <p class="text-gray-400 mb-2">© 2025 Digital Money. Tous droits réservés.</p>
+                        <p class="text-gray-400">Conçu avec <i class="fas fa-heart text-red-500 mx-1"></i> pour votre réussite financière</p>
+                    </div>
+                </div>
+                
+                <div class="mt-12 pt-8 border-t border-gray-800 text-center">
+                    <div class="flex flex-wrap justify-center space-x-6 text-gray-400">
+                        <a href="#accueil" class="hover:text-white mb-2">Accueil</a>
+                        <a href="#services" class="hover:text-white mb-2">Services</a>
+                        <a href="#formations" class="hover:text-white mb-2">Formations</a>
+                        <a href="#coaching" class="hover:text-white mb-2">Coaching</a>
+                        <a href="#contact" class="hover:text-white mb-2">Contact</a>
+                        <a href="#" class="hover:text-white mb-2">Mentions légales</a>
+                        <a href="#" class="hover:text-white mb-2">Politique de confidentialité</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script>
+        // Animation du splash screen avec Anime.js
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation du splash screen
+            const splashScreen = document.getElementById('splashScreen');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Animation d'entrée du splash screen
+            anime({
+                targets: '#splashScreen',
+                opacity: [0, 1],
+                duration: 800,
+                easing: 'easeInOutQuad'
+            });
+            
+            // Animation du logo dans le splash screen
+            anime({
+                targets: '#splashScreen .rounded-2xl',
+                scale: [0.8, 1],
+                rotate: [0, 360],
+                duration: 1500,
+                easing: 'easeOutElastic(1, .5)',
+                delay: 300
+            });
+            
+            // Animation du texte dans le splash screen
+            anime({
+                targets: '#splashScreen h1, #splashScreen p',
+                translateY: [20, 0],
+                opacity: [0, 1],
+                duration: 1000,
+                delay: anime.stagger(200),
+                easing: 'easeOutQuad'
+            });
+            
+            // Disparition du splash screen après 3 secondes
+            setTimeout(function() {
+                anime({
+                    targets: '#splashScreen',
+                    opacity: 0,
+                    scale: 0.95,
+                    duration: 800,
+                    easing: 'easeInOutQuad',
+                    complete: function() {
+                        splashScreen.style.display = 'none';
+                        mainContent.classList.remove('content-hidden');
+                        mainContent.classList.add('content-visible');
+                        
+                        // Animation d'entrée du contenu principal
+                        anime({
+                            targets: '#mainContent',
+                            opacity: [0, 1],
+                            duration: 600,
+                            easing: 'easeInOutQuad'
+                        });
+                    }
+                });
+            }, 3000);
+            
+            // Gestion du menu burger mobile
+            const menuToggle = document.getElementById('menuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            let menuOpen = false;
+            
+            menuToggle.addEventListener('click', function() {
+                if (!menuOpen) {
+                    mobileMenu.classList.remove('menu-closed');
+                    mobileMenu.classList.add('menu-open');
+                    menuToggle.innerHTML = '<i class="fas fa-times text-2xl"></i>';
+                    menuOpen = true;
+                } else {
+                    mobileMenu.classList.remove('menu-open');
+                    mobileMenu.classList.add('menu-closed');
+                    menuToggle.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+                    menuOpen = false;
+                }
+            });
+            
+            // Fermeture du menu mobile au clic sur un lien
+            const mobileLinks = document.querySelectorAll('#mobileMenu a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('menu-open');
+                    mobileMenu.classList.add('menu-closed');
+                    menuToggle.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+                    menuOpen = false;
+                });
+            });
+            
+            // Animation des sections au scroll
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.card-hover, .animate-fade-in, .animate-slide-up');
+                
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.2;
+                    
+                    if (elementPosition < screenPosition) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+            
+            // Initialiser les animations
+            window.addEventListener('scroll', animateOnScroll);
+            // Appeler une fois au chargement pour les éléments déjà visibles
+            animateOnScroll();
+            
+            // Gestion du formulaire de contact
+            const contactForm = document.getElementById('contactForm');
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Animation de soumission
+                const submitBtn = contactForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Envoi en cours...';
+                submitBtn.disabled = true;
+                
+                // Simulation d'envoi (à remplacer par un vrai appel API)
+                setTimeout(function() {
+                    submitBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Message envoyé!';
+                    submitBtn.style.background = 'linear-gradient(to right, #10b981, #059669)';
+                    
+                    // Réinitialiser le formulaire
+                    setTimeout(function() {
+                        contactForm.reset();
+                        submitBtn.textContent = originalText;
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = 'linear-gradient(to right, #3b82f6, #10b981)';
+                        
+                        // Notification de succès
+                        alert('Merci! Votre message a été envoyé. Nous vous répondrons dans les plus brefs délais.');
+                    }, 2000);
+                }, 1500);
+            });
+            
+            // Animation des cartes au survol
+            const cards = document.querySelectorAll('.card-hover');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    anime({
+                        targets: this,
+                        scale: 1.02,
+                        duration: 300,
+                        easing: 'easeOutQuad'
+                    });
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    anime({
+                        targets: this,
+                        scale: 1,
+                        duration: 300,
+                        easing: 'easeOutQuad'
+                    });
+                });
+            });
+            
+            // Smooth scrolling pour les ancres
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
