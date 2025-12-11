@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Digital Money - Gagnez de l'argent en ligne</title>
     
     <!-- CDN Google Fonts -->
@@ -19,10 +19,18 @@
     <!-- CDN Anime.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     
-    <!-- Configuration Tailwind personnalisée -->
+    <!-- Configuration Tailwind Mobile First -->
     <script>
         tailwind.config = {
             theme: {
+                screens: {
+                    'xs': '375px',
+                    'sm': '640px',
+                    'md': '768px',
+                    'lg': '1024px',
+                    'xl': '1280px',
+                    '2xl': '1536px',
+                },
                 extend: {
                     colors: {
                         primary: {
@@ -42,9 +50,17 @@
                         'sans': ['Inter', 'system-ui', 'sans-serif'],
                         'heading': ['Poppins', 'Inter', 'sans-serif'],
                     },
+                    fontSize: {
+                        'xxs': '0.625rem',
+                    },
+                    spacing: {
+                        '18': '4.5rem',
+                        '88': '22rem',
+                    },
                     animation: {
                         'fade-in': 'fadeIn 0.5s ease-in-out',
                         'slide-up': 'slideUp 0.5s ease-out',
+                        'slide-down': 'slideDown 0.3s ease-out',
                         'pulse-subtle': 'pulse 2s infinite',
                     },
                     keyframes: {
@@ -56,6 +72,10 @@
                             '0%': { transform: 'translateY(10px)', opacity: '0' },
                             '100%': { transform: 'translateY(0)', opacity: '1' },
                         },
+                        slideDown: {
+                            '0%': { transform: 'translateY(-10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
                     }
                 }
             }
@@ -63,10 +83,30 @@
     </script>
     
     <style>
-        /* Styles CSS personnalisés */
+        /* Styles CSS Mobile First */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
         body {
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Touch-friendly buttons */
+        button, 
+        a[role="button"] {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* Optimisation tactile */
+        input, 
+        select, 
+        textarea {
+            font-size: 16px; /* Empêche le zoom sur iOS */
         }
         
         .splash-screen {
@@ -79,6 +119,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            touch-action: none;
         }
         
         .content-hidden {
@@ -100,19 +141,23 @@
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(16, 185, 129, 0.9) 100%);
         }
         
-        .card-hover {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        /* Optimisations pour mobile */
+        .mobile-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
         
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        .mobile-card:active {
+            transform: scale(0.98);
         }
         
         .menu-open {
-            max-height: 500px;
+            max-height: 100vh;
             opacity: 1;
-            transition: max-height 0.5s ease, opacity 0.3s ease;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            overflow-y: auto;
         }
         
         .menu-closed {
@@ -120,114 +165,161 @@
             opacity: 0;
             overflow: hidden;
         }
+        
+        /* Scrollbar personnalisée pour mobile */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        
+        /* Optimisation pour les petits écrans */
+        @media (max-width: 640px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .mobile-text-sm {
+                font-size: 0.875rem;
+            }
+            
+            .mobile-p-4 {
+                padding: 1rem;
+            }
+            
+            .mobile-mt-2 {
+                margin-top: 0.5rem;
+            }
+        }
+        
+        /* Prévention du zoom sur iOS */
+        @supports (-webkit-touch-callout: none) {
+            input, select, textarea {
+                font-size: 16px;
+            }
+        }
+        
+        /* Animations optimisées pour mobile */
+        .will-change-transform {
+            will-change: transform;
+        }
+        
+        /* Amélioration de la lisibilité sur mobile */
+        .mobile-text-balance {
+            text-wrap: balance;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
     
-    <!-- Splash Screen (disparaît après 3 secondes) -->
+    <!-- Splash Screen (disparaît après 2.5 secondes sur mobile) -->
     <div id="splashScreen" class="splash-screen gradient-bg">
-        <div class="text-center text-white px-6">
-            <!-- Logo placeholder avec style moderne -->
-            <div class="mb-8 flex justify-center">
-                <div class="w-24 h-24 bg-white rounded-2xl flex items-center justify-center shadow-xl">
- <img src="digitallogo.png" alt="Welcome" class="full-img">           
+        <div class="text-center text-white px-4">
+            <!-- Logo -->
+            <div class="mb-6 flex justify-center">
+                <div class="w-20 h-20 bg-white rounded-xl flex items-center justify-center shadow-lg">
+                    <img src="digitallogo.png" alt="Digital Money" class="w-16 h-16 object-contain">
                 </div>
             </div>
             
-            <h1 class="text-3xl md:text-4xl font-bold mb-4 font-heading">Digital Money</h1>
-            <p class="text-xl md:text-2xl font-light mb-6">Votre avenir financier commence ici</p>
-            <div class="w-24 h-1 bg-white mx-auto rounded-full"></div>
-            <p class="mt-8 text-lg max-w-md mx-auto opacity-90">Plateforme de revenus en ligne • Marketing d'affiliation • Formations digitales</p>
+            <h1 class="text-2xl font-bold mb-3 font-heading">Digital Money</h1>
+            <p class="text-lg font-light mb-4">Votre avenir financier commence ici</p>
+            <div class="w-20 h-1 bg-white mx-auto rounded-full"></div>
+            <p class="mt-6 text-sm max-w-xs mx-auto opacity-90">Plateforme de revenus en ligne • Marketing d'affiliation • Formations digitales</p>
         </div>
     </div>
     
-    <!-- Contenu principal du site (caché au début) -->
+    <!-- Contenu principal du site -->
     <div id="mainContent" class="content-hidden">
         
-        <!-- Header avec navigation responsive -->
-        <header class="sticky top-0 z-50 bg-white shadow-md">
-            <div class="container mx-auto px-4 py-4">
+        <!-- Header avec navigation mobile first -->
+        <header class="sticky top-0 z-50 bg-white shadow-sm">
+            <div class="px-4 py-3">
                 <div class="flex justify-between items-center">
                     <!-- Logo -->
                     <div class="flex items-center">
-                        <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3">
- <img src="digitallogo.png" alt="Welcome" class="full-img" style="scale: 1.5;">                          
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-2">
+                            <img src="digitallogo.png" alt="Digital Money" class="w-6 h-6 object-contain">
                         </div>
-                        <span class="text-2xl font-bold text-blue-700 font-heading"></span>
+                        <span class="text-xl font-bold text-blue-700 font-heading">Digital Money</span>
                     </div>
                     
-                    <!-- Menu desktop -->
-                    <nav class="hidden md:flex space-x-8">
-                        <a href="#accueil" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Accueil</a>
-                        <a href="#services" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Services</a>
-                        <a href="#formations" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Formations</a>
-                        <a href="#coaching" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Coaching</a>
-                        <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Contact</a>
+                    <!-- Bouton CTA mobile -->
+                    
+                    
+                    <!-- Menu burger mobile -->
+                    <button id="menuToggle" class="md:hidden text-gray-700 w-10 h-10 flex items-center justify-center">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    
+                    <!-- Menu desktop (caché sur mobile) -->
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="#accueil" class="text-gray-700 hover:text-blue-600 font-medium text-sm transition duration-300">Accueil</a>
+                        <a href="#services" class="text-gray-700 hover:text-blue-600 font-medium text-sm transition duration-300">Services</a>
+                        <a href="#formations" class="text-gray-700 hover:text-blue-600 font-medium text-sm transition duration-300">Formations</a>
+                        <a href="#coaching" class="text-gray-700 hover:text-blue-600 font-medium text-sm transition duration-300">Coaching</a>
+                        <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium text-sm transition duration-300">Contact</a>
                     </nav>
                     
                     <!-- Bouton CTA desktop -->
                     <div class="hidden md:block">
-                        <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md hover:shadow-lg">
+                        <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium text-sm transition duration-300 shadow-sm">
                             Commencer maintenant
                         </a>
                     </div>
-                    
-                    <!-- Menu burger mobile -->
-                    <button id="menuToggle" class="md:hidden text-gray-700 focus:outline-none">
-                        <i class="fas fa-bars text-2xl"></i>
-                    </button>
                 </div>
                 
-                <!-- Menu mobile (caché par défaut) -->
-                <div id="mobileMenu" class="menu-closed md:hidden mt-4">
-                    <div class="flex flex-col space-y-4 pb-4">
-                        <a href="#accueil" class="text-gray-700 hover:text-blue-600 font-medium py-2">Accueil</a>
-                        <a href="#services" class="text-gray-700 hover:text-blue-600 font-medium py-2">Services</a>
-                        <a href="#formations" class="text-gray-700 hover:text-blue-600 font-medium py-2">Formations</a>
-                        <a href="#coaching" class="text-gray-700 hover:text-blue-600 font-medium py-2">Coaching</a>
-                        <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium py-2">Contact</a>
-                        <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium text-center transition duration-300 mt-2">
-                            Commencer maintenant
+                <!-- Menu mobile -->
+                <div id="mobileMenu" class="menu-closed md:hidden mt-3">
+                    <div class="flex flex-col space-y-3 pb-3">
+                        <a href="#accueil" class="text-gray-700 hover:text-blue-600 font-medium py-2 px-2 rounded-lg hover:bg-blue-50">Accueil</a>
+                        <a href="#services" class="text-gray-700 hover:text-blue-600 font-medium py-2 px-2 rounded-lg hover:bg-blue-50">Services</a>
+                        <a href="#formations" class="text-gray-700 hover:text-blue-600 font-medium py-2 px-2 rounded-lg hover:bg-blue-50">Formations</a>
+                        <a href="#coaching" class="text-gray-700 hover:text-blue-600 font-medium py-2 px-2 rounded-lg hover:bg-blue-50">Coaching</a>
+                        <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium py-2 px-2 rounded-lg hover:bg-blue-50">Contact</a>
+                        <a href="#inscription" class="bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium text-center transition duration-300 mt-1 shadow-sm">
+                            S'inscrire maintenant
                         </a>
                     </div>
                 </div>
             </div>
         </header>
         
-        <!-- Section Hero -->
-        <section id="accueil" class="hero-gradient text-white py-16 md:py-24">
-            <div class="container mx-auto px-4">
-                <div class="flex flex-col md:flex-row items-center">
-                    <div class="md:w-1/2 mb-12 md:mb-0">
-                        <h1 class="text-4xl md:text-5xl font-bold mb-6 font-heading animate-fade-in">
+        <!-- Section Hero (optimisé mobile) -->
+        <section id="accueil" class="hero-gradient text-white pt-12 pb-16 md:py-24">
+            <div class="px-4">
+                <div class="flex flex-col items-center">
+                    <div class="w-full max-w-xl">
+                        <h1 class="text-2xl sm:text-3xl font-bold mb-4 font-heading text-center animate-fade-in">
                             Gagnez de l'argent en ligne depuis votre maison
                         </h1>
-                        <p class="text-xl mb-8 opacity-90 animate-slide-up">
-                            Digital Money vous guide pas à pas pour créer des revenus passifs grâce au marketing d'affiliation, aux eBooks et aux formations digitales. Travaillez où vous voulez, quand vous voulez.
+                        <p class="text-base sm:text-lg mb-6 opacity-90 text-center animate-slide-up mobile-text-balance">
+                            Digital Money vous guide pas à pas pour créer des revenus passifs grâce au marketing d'affiliation, aux eBooks et aux formations digitales.
                         </p>
-                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 animate-slide-up">
-                            <a href="#services" class="bg-white text-blue-700 hover:bg-gray-100 px-8 py-4 rounded-lg font-bold text-lg text-center transition duration-300 shadow-lg">
+                        <div class="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:space-x-3 animate-slide-up">
+                            <a href="#services" class="bg-white text-blue-700 hover:bg-gray-100 px-6 py-3 rounded-lg font-semibold text-center transition duration-300 shadow-sm active:scale-95">
                                 Découvrir nos services
                             </a>
-                            <a href="#contact" class="bg-transparent border-2 border-white hover:bg-white hover:text-blue-700 px-8 py-4 rounded-lg font-bold text-lg text-center transition duration-300">
-                                Contactez-nous
+                            <a href="#inscription" class="bg-transparent border border-white hover:bg-white hover:text-blue-700 px-6 py-3 rounded-lg font-semibold text-center transition duration-300 active:scale-95">
+                                S'inscrire maintenant
                             </a>
                         </div>
                     </div>
-                    <div class="md:w-1/2 flex justify-center">
-                        <!-- Placeholder pour image/vidéo -->
-                        <div class="relative w-full max-w-lg">
-                            <div class="bg-white rounded-2xl shadow-2xl p-2 transform rotate-3">
-                                <div class="bg-gradient-to-r from-blue-500 to-green-400 h-64 rounded-xl flex items-center justify-center">
- <img src="illustration-removebg-preview.png" alt="Welcome" class="full-img" style="scale: 1.5;">                          
+                    <div class="mt-10 w-full max-w-sm">
+                        <div class="relative">
+                            <div class="bg-white rounded-xl shadow-lg p-2 transform rotate-2">
+                                <div class="bg-gradient-to-r from-blue-500 to-green-400 h-48 rounded-lg flex items-center justify-center">
+                                    <img src="illustration-removebg-preview.png" alt="Gagner en ligne" class="w-full h-full object-contain p-4">
                                 </div>
-                            </div>
-                            <div class="absolute -bottom-6 -left-6 bg-white rounded-xl transform -rotate-6">
-                              
-                               
-                               
-                                   
-                          
                             </div>
                         </div>
                     </div>
@@ -235,272 +327,610 @@
             </div>
         </section>
         
-        <!-- Section Services -->
-        <section id="services" class="py-16 md:py-24 bg-white">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4 font-heading text-gray-800">Nos Services pour Vous</h2>
-                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">Découvrez comment Digital Money peut transformer votre vie financière avec ces services adaptés au marché Haïtien et international.</p>
+        <!-- Section Services (mobile first) -->
+        <section id="services" class="py-12 bg-white sm:py-16">
+            <div class="px-4">
+                <div class="text-center mb-10">
+                    <h2 class="text-2xl sm:text-3xl font-bold mb-3 font-heading text-gray-800">Nos Services pour Vous</h2>
+                    <p class="text-base text-gray-600 max-w-xl mx-auto mobile-text-balance">
+                        Découvrez comment Digital Money peut transformer votre vie financière.
+                    </p>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     <!-- Service 1 -->
-                    <div class="bg-gray-50 rounded-2xl p-8 card-hover border border-gray-100">
-                        <div class="bg-blue-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
-                            <i class="fas fa-users text-blue-600 text-2xl"></i>
+                    <div class="bg-gray-50 rounded-xl p-6 mobile-card border border-gray-100">
+                        <div class="bg-blue-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-users text-blue-600 text-xl"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Marketing d'Affiliation</h3>
-                        <p class="text-gray-600 mb-6">Apprenez à générer des commissions en promouvant des produits et services en ligne. Nous vous formons aux meilleures techniques adaptées au marché local et international.</p>
-                        <ul class="mb-6 space-y-2">
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
+                        <h3 class="text-lg font-bold mb-3 text-gray-800">Marketing d'Affiliation</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            Apprenez à générer des commissions en promouvant des produits et services en ligne.
+                        </p>
+                        <ul class="mb-4 space-y-2">
+                            <li class="flex items-center text-sm">
+                                <i class="fas fa-check text-green-500 mr-2 text-xs"></i>
                                 <span>Formation complète pas à pas</span>
                             </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
+                            <li class="flex items-center text-sm">
+                                <i class="fas fa-check text-green-500 mr-2 text-xs"></i>
                                 <span>Accès à des plateformes exclusives</span>
                             </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
+                            <li class="flex items-center text-sm">
+                                <i class="fas fa-check text-green-500 mr-2 text-xs"></i>
                                 <span>Support continu et communauté</span>
                             </li>
                         </ul>
-                        <a href="#contact" class="inline-block text-blue-600 font-semibold hover:text-blue-800">
-                            En savoir plus <i class="fas fa-arrow-right ml-2"></i>
+                        <a href="#inscription" class="inline-flex items-center text-blue-600 font-medium text-sm hover:text-blue-800">
+                            En savoir plus <i class="fas fa-arrow-right ml-2 text-xs"></i>
                         </a>
                     </div>
                     
                     <!-- Service 2 -->
-                    <div class="bg-gray-50 rounded-2xl p-8 card-hover border border-gray-100">
-                        <div class="bg-green-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
-                            <i class="fas fa-book-open text-green-600 text-2xl"></i>
+                    <div class="bg-gray-50 rounded-xl p-6 mobile-card border border-gray-100">
+                        <div class="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-book-open text-green-600 text-xl"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4 text-gray-800">eBooks & Formations</h3>
-                        <p class="text-gray-600 mb-6">Accédez à notre bibliothèque d'eBooks et formations sur le marketing digital, la création de contenu et la gestion financière. Des ressources pratiques pour développer vos compétences.</p>
-                        <ul class="mb-6 space-y-2">
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
+                        <h3 class="text-lg font-bold mb-3 text-gray-800">eBooks & Formations</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            Accédez à notre bibliothèque d'eBooks et formations sur le marketing digital.
+                        </p>
+                        <ul class="mb-4 space-y-2">
+                            <li class="flex items-center text-sm">
+                                <i class="fas fa-check text-green-500 mr-2 text-xs"></i>
                                 <span>eBooks téléchargeables</span>
                             </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
+                            <li class="flex items-center text-sm">
+                                <i class="fas fa-check text-green-500 mr-2 text-xs"></i>
                                 <span>Formations vidéo complètes</span>
                             </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
+                            <li class="flex items-center text-sm">
+                                <i class="fas fa-check text-green-500 mr-2 text-xs"></i>
                                 <span>Mises à jour régulières</span>
                             </li>
                         </ul>
-                        <a href="#formations" class="inline-block text-blue-600 font-semibold hover:text-blue-800">
-                            Voir les formations <i class="fas fa-arrow-right ml-2"></i>
+                        <a href="#formations" class="inline-flex items-center text-blue-600 font-medium text-sm hover:text-blue-800">
+                            Voir les formations <i class="fas fa-arrow-right ml-2 text-xs"></i>
                         </a>
                     </div>
                     
                     <!-- Service 3 -->
-                    <div class="bg-gray-50 rounded-2xl p-8 card-hover border border-gray-100">
-                        <div class="bg-purple-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
-                            <i class="fas fa-chalkboard-teacher text-purple-600 text-2xl"></i>
+                    <div class="bg-gray-50 rounded-xl p-6 mobile-card border border-gray-100">
+                        <div class="bg-purple-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-chalkboard-teacher text-purple-600 text-xl"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Séances de Coaching</h3>
-                        <p class="text-gray-600 mb-6">Bénéficiez d'un accompagnement personnalisé pour atteindre vos objectifs financiers. Nos coachs experts vous guident dans la mise en place de votre stratégie en ligne.</p>
-                        <ul class="mb-6 space-y-2">
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
+                        <h3 class="text-lg font-bold mb-3 text-gray-800">Séances de Coaching</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            Bénéficiez d'un accompagnement personnalisé pour atteindre vos objectifs financiers.
+                        </p>
+                        <ul class="mb-4 space-y-2">
+                            <li class="flex items-center text-sm">
+                                <i class="fas fa-check text-green-500 mr-2 text-xs"></i>
                                 <span>Séances individuelles ou en groupe</span>
                             </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
+                            <li class="flex items-center text-sm">
+                                <i class="fas fa-check text-green-500 mr-2 text-xs"></i>
                                 <span>Analyse de votre progression</span>
                             </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
+                            <li class="flex items-center text-sm">
+                                <i class="fas fa-check text-green-500 mr-2 text-xs"></i>
                                 <span>Stratégies adaptées à votre profil</span>
                             </li>
                         </ul>
-                        <a href="#coaching" class="inline-block text-blue-600 font-semibold hover:text-blue-800">
-                            Réserver une séance <i class="fas fa-arrow-right ml-2"></i>
+                        <a href="#coaching" class="inline-flex items-center text-blue-600 font-medium text-sm hover:text-blue-800">
+                            Réserver une séance <i class="fas fa-arrow-right ml-2 text-xs"></i>
                         </a>
                     </div>
                 </div>
             </div>
         </section>
         
-        <!-- Section Formations -->
-        <section id="formations" class="py-16 md:py-24 bg-gray-50">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4 font-heading text-gray-800">Nos Formations Populaires</h2>
-                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">Des formations complètes et accessibles pour développer vos compétences et générer des revenus en ligne.</p>
+        <!-- Section Formulaire d'inscription (mobile first) -->
+        <section id="inscription" class="py-12 bg-gradient-to-r from-blue-50 to-green-50 sm:py-16">
+            <div class="px-4">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl sm:text-3xl font-bold mb-3 font-heading text-gray-800">📋 Rejoignez Digital Money</h2>
+                    <p class="text-base text-gray-600 max-w-xl mx-auto mobile-text-balance">
+                        Transformez votre vie financière en vous inscrivant à notre programme d'affiliation.
+                    </p>
+                </div>
+
+                <div class="max-w-6xl mx-auto">
+                    <!-- Content Section -->
+                    <div class="mb-8">
+                        <div class="inline-block bg-gradient-to-r from-blue-100 to-green-100 text-blue-700 font-semibold px-4 py-1.5 rounded-full mb-4 text-sm">
+                            🚀 Programme d'affiliation
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">
+                            Commencez à gagner en ligne dès aujourd'hui
+                        </h3>
+                        <p class="text-gray-600 mb-6 text-sm">
+                            Rejoignez notre communauté et bénéficiez d'une formation complète, d'un accompagnement personnalisé et d'opportunités de revenus réels.
+                        </p>
+
+                        <!-- Benefits List -->
+                        <div class="space-y-4 mb-6">
+                            <div class="flex items-start">
+                                <div class="bg-green-100 p-2 rounded-lg mr-3 flex-shrink-0">
+                                    <i class="fas fa-check text-green-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 text-sm">Formation Complète</h4>
+                                    <p class="text-gray-600 text-xs">Apprenez le marketing d'affiliation de A à Z</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="bg-blue-100 p-2 rounded-lg mr-3 flex-shrink-0">
+                                    <i class="fas fa-headset text-blue-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 text-sm">Accompagnement 24/7</h4>
+                                    <p class="text-gray-600 text-xs">Support continu via WhatsApp et Telegram</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="bg-purple-100 p-2 rounded-lg mr-3 flex-shrink-0">
+                                    <i class="fas fa-money-bill-wave text-purple-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 text-sm">Revenus Réels</h4>
+                                    <p class="text-gray-600 text-xs">Commencez à générer vos premiers revenus rapidement</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Call to Action -->
+                        <div class="text-center">
+                            <button id="openInscriptionModal" class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold py-3.5 rounded-lg text-base transition duration-300 shadow-sm active:scale-95">
+                                <i class="fas fa-user-plus mr-2"></i> S'inscrire Maintenant
+                            </button>
+                            <p class="text-gray-500 text-xs mt-2">Inscription rapide - 5 minutes seulement</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal d'inscription (mobile optimisé) -->
+        <div id="inscriptionModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-start justify-center p-0 sm:p-4 overflow-y-auto">
+            <div class="bg-white w-full min-h-screen sm:min-h-0 sm:rounded-lg sm:shadow-2xl sm:max-w-2xl sm:max-h-[90vh] sm:my-auto overflow-y-auto">
+                <!-- Modal Header -->
+                <div class="sticky top-0 bg-gradient-to-r from-blue-600 to-green-500 p-4 sm:p-6 z-10">
+                    <div class="flex justify-between items-center">
+                        <div class="pr-4">
+                            <h3 class="text-lg font-bold text-white font-heading">Formulaire d'inscription</h3>
+                            <p class="text-white opacity-90 text-xs mt-1">Remplissez pour commencer votre parcours</p>
+                        </div>
+                        <button id="closeModal" class="text-white hover:text-gray-200 text-xl flex-shrink-0 w-10 h-10 flex items-center justify-center">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Formulaire -->
+                <form id="inscriptionForm" class="p-4 sm:p-6">
+                    <!-- Informations personnelles -->
+                    <div class="mb-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-200">Informations personnelles</h4>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 mb-1 text-sm">Nom complet <span class="text-red-500">*</span></label>
+                                <input type="text" id="fullName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base" required>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-gray-700 mb-1 text-sm">Âge <span class="text-red-500">*</span></label>
+                                    <input type="number" id="age" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base" required min="16" max="70">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 mb-1 text-sm">Sexe <span class="text-red-500">*</span></label>
+                                    <select id="gender" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base" required>
+                                        <option value="">Sélectionnez</option>
+                                        <option value="Homme">Homme</option>
+                                        <option value="Femme">Femme</option>
+                                        <option value="Autre">Autre</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-1 text-sm">Numéro WhatsApp <span class="text-red-500">*</span></label>
+                                <input type="tel" id="whatsapp" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base" placeholder="509XXXXXXXX" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-1 text-sm">Adresse e-mail <span class="text-red-500">*</span></label>
+                                <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-1 text-sm">Zone / Localité <span class="text-red-500">*</span></label>
+                                <input type="text" id="location" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base" required>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-gray-700 mb-1 text-sm">Pays de résidence <span class="text-red-500">*</span></label>
+                                    <select id="country" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base" required>
+                                        <option value="">Sélectionnez</option>
+                                        <option value="Haïti">Haïti</option>
+                                        <option value="France">France</option>
+                                        <option value="Canada">Canada</option>
+                                        <option value="USA">États-Unis</option>
+                                        <option value="Autre">Autre</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 mb-1 text-sm">Profession</label>
+                                    <input type="text" id="profession" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Référent -->
+                    <div class="mb-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-200">Référent(e)</h4>
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm">Nom de la personne qui vous inscrit</label>
+                            <p class="text-xs text-gray-500 mb-3">(Si vous avez été recommandé(e))</p>
+                            <input type="text" id="referrer" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base">
+                        </div>
+                    </div>
+                    
+                    <!-- Votre expérience -->
+                    <div class="mb-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-200">Votre expérience</h4>
+                        
+                        <div class="mb-4">
+                            <p class="text-gray-700 mb-3 text-sm">Avez-vous déjà une expérience dans le travail en ligne ? <span class="text-red-500">*</span></p>
+                            <div class="flex space-x-6">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="onlineExperience" value="Oui" class="h-5 w-5 text-blue-600" required>
+                                    <span class="ml-2 text-gray-700 text-sm">Oui</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="onlineExperience" value="Non" class="h-5 w-5 text-blue-600" required>
+                                    <span class="ml-2 text-gray-700 text-sm">Non</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="experienceDetails" class="hidden">
+                            <label class="block text-gray-700 mb-1 text-sm">Si oui, précisez brièvement :</label>
+                            <textarea id="experienceText" rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Disponibilité -->
+                    <div class="mb-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-200">Disponibilité</h4>
+                        
+                        <p class="text-gray-700 mb-3 text-sm">Combien d'heures par jour pouvez-vous consacrer ? <span class="text-red-500">*</span></p>
+                        <div class="space-y-2">
+                            <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                <input type="radio" name="availability" value="1–2 heures" class="h-5 w-5 text-blue-600 mr-3" required>
+                                <span class="text-gray-700 text-sm">1–2 heures</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                <input type="radio" name="availability" value="3–4 heures" class="h-5 w-5 text-blue-600 mr-3" required>
+                                <span class="text-gray-700 text-sm">3–4 heures</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                <input type="radio" name="availability" value="5 heures ou plus" class="h-5 w-5 text-blue-600 mr-3" required>
+                                <span class="text-gray-700 text-sm">5 heures ou plus</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                <input type="radio" name="availability" value="Variable" class="h-5 w-5 text-blue-600 mr-3" required>
+                                <span class="text-gray-700 text-sm flex-1">Variable selon mon emploi du temps</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Compétences et outils -->
+                    <div class="mb-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-200">Compétences et outils</h4>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-gray-700 mb-3 text-sm">Téléphone avec WhatsApp/TikTok/Telegram ? <span class="text-red-500">*</span></p>
+                                <div class="flex space-x-6">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="smartphone" value="Oui" class="h-5 w-5 text-blue-600" required>
+                                        <span class="ml-2 text-gray-700 text-sm">Oui</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="smartphone" value="Non" class="h-5 w-5 text-blue-600" required>
+                                        <span class="ml-2 text-gray-700 text-sm">Non</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <p class="text-gray-700 mb-3 text-sm">Base en marketing digital ? <span class="text-red-500">*</span></p>
+                                <div class="flex flex-wrap gap-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="marketing" value="Oui" class="h-5 w-5 text-blue-600" required>
+                                        <span class="ml-2 text-gray-700 text-sm">Oui</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="marketing" value="Non" class="h-5 w-5 text-blue-600" required>
+                                        <span class="ml-2 text-gray-700 text-sm">Non</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="marketing" value="Un peu" class="h-5 w-5 text-blue-600" required>
+                                        <span class="ml-2 text-gray-700 text-sm">Un peu</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Méthodes de paiement -->
+                    <div class="mb-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-200">Méthodes de paiement</h4>
+                        
+                        <div class="mb-4">
+                            <p class="text-gray-700 mb-3 text-sm">Quels moyens de paiement utilisez-vous ? <span class="text-red-500">*</span></p>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                    <input type="radio" name="payment" value="NatCash" class="h-5 w-5 text-blue-600 mr-2" required>
+                                    <span class="text-gray-700 text-sm">NatCash</span>
+                                </label>
+                                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                    <input type="radio" name="payment" value="MonCash" class="h-5 w-5 text-blue-600 mr-2" required>
+                                    <span class="text-gray-700 text-sm">MonCash</span>
+                                </label>
+                                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                    <input type="radio" name="payment" value="Compte bancaire" class="h-5 w-5 text-blue-600 mr-2" required>
+                                    <span class="text-gray-700 text-sm">Bancaire</span>
+                                </label>
+                                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                    <input type="radio" name="payment" value="Autre" class="h-5 w-5 text-blue-600 mr-2" required>
+                                    <span class="text-gray-700 text-sm">Autre</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm">Numéro NatCash / MonCash</label>
+                            <input type="text" id="paymentNumber" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base" placeholder="509XXXXXXXX">
+                        </div>
+                    </div>
+                    
+                    <!-- Découverte -->
+                    <div class="mb-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-200">Découverte</h4>
+                        
+                        <p class="text-gray-700 mb-3 text-sm">Comment avez-vous connu Digital Money ? <span class="text-red-500">*</span></p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                <input type="radio" name="discovery" value="TikTok" class="h-5 w-5 text-blue-600 mr-2" required>
+                                <span class="text-gray-700 text-sm">TikTok</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                <input type="radio" name="discovery" value="WhatsApp" class="h-5 w-5 text-blue-600 mr-2" required>
+                                <span class="text-gray-700 text-sm">WhatsApp</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                <input type="radio" name="discovery" value="Recommandation" class="h-5 w-5 text-blue-600 mr-2" required>
+                                <span class="text-gray-700 text-sm">Recommandation</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                <input type="radio" name="discovery" value="Facebook" class="h-5 w-5 text-blue-600 mr-2" required>
+                                <span class="text-gray-700 text-sm">Facebook</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                <input type="radio" name="discovery" value="Instagram" class="h-5 w-5 text-blue-600 mr-2" required>
+                                <span class="text-gray-700 text-sm">Instagram</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                <input type="radio" name="discovery" value="Autre" class="h-5 w-5 text-blue-600 mr-2" required>
+                                <span class="text-gray-700 text-sm">Autre</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Engagement -->
+                    <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">📌 Engagement</h4>
+                        <p class="text-gray-700 mb-4 italic text-sm">
+                            En remplissant ce formulaire, je confirme mon intérêt à rejoindre le programme Digital Money.
+                        </p>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 mb-1 text-sm">Signature / Nom <span class="text-red-500">*</span></label>
+                                <input type="text" id="signature" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-1 text-sm">Date <span class="text-red-500">*</span></label>
+                                <input type="date" id="date" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bouton de soumission -->
+                    <div class="text-center sticky bottom-0 bg-white pt-4 pb-2 -mx-4 px-4 border-t border-gray-200">
+                        <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold py-3.5 rounded-lg text-base transition duration-300 shadow-sm active:scale-95">
+                            <i class="fab fa-whatsapp mr-2"></i> Envoyer via WhatsApp
+                        </button>
+                        <p class="text-gray-500 text-xs mt-2">Le formulaire sera envoyé au +509 9413 82430</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Section Formations -->
+        <section id="formations" class="py-12 bg-gray-50 sm:py-16">
+            <div class="px-4">
+                <div class="text-center mb-10">
+                    <h2 class="text-2xl sm:text-3xl font-bold mb-3 font-heading text-gray-800">Nos Formations Populaires</h2>
+                    <p class="text-base text-gray-600 max-w-xl mx-auto mobile-text-balance">
+                        Des formations complètes pour développer vos compétences et générer des revenus en ligne.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                     <!-- Formation 1 -->
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
-                        <div class="bg-blue-500 h-3"></div>
-                        <div class="p-8">
+                    <div class="bg-white rounded-xl overflow-hidden shadow-sm mobile-card">
+                        <div class="bg-blue-500 h-2"></div>
+                        <div class="p-6">
                             <div class="flex justify-between items-start mb-4">
-                                <h3 class="text-xl font-bold text-gray-800">Marketing d'Affiliation Débutant</h3>
-                                <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">Populaire</span>
+                                <h3 class="text-lg font-bold text-gray-800">Marketing d'Affiliation Débutant</h3>
+                                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">Populaire</span>
                             </div>
-                            <p class="text-gray-600 mb-6">Apprenez les bases du marketing d'affiliation et commencez à générer vos premiers revenus en ligne.</p>
-                            <div class="mb-6">
-                                <span class="text-3xl font-bold text-gray-800">$49</span>
-                                <span class="text-gray-500">/ formation complète</span>
+                            <p class="text-gray-600 text-sm mb-5">Apprenez les bases du marketing d'affiliation et commencez à générer vos premiers revenus.</p>
+                            <div class="mb-5">
+                                <span class="text-2xl font-bold text-gray-800">$49</span>
+                                <span class="text-gray-500 text-sm">/ formation</span>
                             </div>
-                            <a href="#contact" class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-3 rounded-lg font-medium transition duration-300">
+                            <a href="#contact" class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-2.5 rounded-lg font-medium text-sm transition duration-300 active:scale-95">
                                 Acheter maintenant
                             </a>
                         </div>
                     </div>
                     
                     <!-- Formation 2 -->
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
-                        <div class="bg-green-500 h-3"></div>
-                        <div class="p-8">
-                            <h3 class="text-xl font-bold text-gray-800 mb-4">Création d'eBooks à Vendre</h3>
-                            <p class="text-gray-600 mb-6">Découvrez comment créer, publier et vendre vos propres eBooks sur différentes plateformes.</p>
-                            <div class="mb-6">
-                                <span class="text-3xl font-bold text-gray-800">$25</span>
-                                <span class="text-gray-500">/ formation complète</span>
+                    <div class="bg-white rounded-xl overflow-hidden shadow-sm mobile-card">
+                        <div class="bg-green-500 h-2"></div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">Création d'eBooks à Vendre</h3>
+                            <p class="text-gray-600 text-sm mb-5">Découvrez comment créer, publier et vendre vos propres eBooks.</p>
+                            <div class="mb-5">
+                                <span class="text-2xl font-bold text-gray-800">$25</span>
+                                <span class="text-gray-500 text-sm">/ formation</span>
                             </div>
-                            <a href="#contact" class="block w-full bg-green-600 hover:bg-green-700 text-white text-center py-3 rounded-lg font-medium transition duration-300">
+                            <a href="#contact" class="block w-full bg-green-600 hover:bg-green-700 text-white text-center py-2.5 rounded-lg font-medium text-sm transition duration-300 active:scale-95">
                                 Acheter maintenant
                             </a>
                         </div>
                     </div>
                     
                     <!-- Formation 3 -->
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
-                        <div class="bg-purple-500 h-3"></div>
-                        <div class="p-8">
-                            <h3 class="text-xl font-bold text-gray-800 mb-4">Réseaux Sociaux pour Vendre</h3>
-                            <p class="text-gray-600 mb-6">Maîtrisez les réseaux sociaux pour promouvoir vos produits et services efficacement.</p>
-                            <div class="mb-6">
-                                <span class="text-3xl font-bold text-gray-800">$59</span>
-                                <span class="text-gray-500">/ formation complète</span>
+                    <div class="bg-white rounded-xl overflow-hidden shadow-sm mobile-card">
+                        <div class="bg-purple-500 h-2"></div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">Réseaux Sociaux pour Vendre</h3>
+                            <p class="text-gray-600 text-sm mb-5">Maîtrisez les réseaux sociaux pour promouvoir vos produits efficacement.</p>
+                            <div class="mb-5">
+                                <span class="text-2xl font-bold text-gray-800">$59</span>
+                                <span class="text-gray-500 text-sm">/ formation</span>
                             </div>
-                            <a href="#contact" class="block w-full bg-purple-600 hover:bg-purple-700 text-white text-center py-3 rounded-lg font-medium transition duration-300">
+                            <a href="#contact" class="block w-full bg-purple-600 hover:bg-purple-700 text-white text-center py-2.5 rounded-lg font-medium text-sm transition duration-300 active:scale-95">
                                 Acheter maintenant
                             </a>
                         </div>
                     </div>
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
-    <div class="bg-purple-500 h-3"></div>
-    <div class="p-8">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">Séance Coaching</h3>
-        <p class="text-gray-600 mb-6">Profitez d’une séance individuelle pour améliorer vos compétences et atteindre vos objectifs plus rapidement.</p>
-        <div class="mb-6">
-            <span class="text-3xl font-bold text-gray-800">$20</span>
-            <span class="text-gray-500">/ séance</span>
-        </div>
-        <a href="#contact" class="block w-full bg-purple-600 hover:bg-purple-700 text-white text-center py-3 rounded-lg font-medium transition duration-300">
-            Réserver maintenant
-        </a>
-    </div>
-</div>
-
+                    
                     <!-- Formation 4 -->
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
-                        <div class="bg-yellow-500 h-3"></div>
-                        <div class="p-8">
-                            <h3 class="text-xl font-bold text-gray-800 mb-4">Pack Complet Digital Money</h3>
-                            <p class="text-gray-600 mb-6">Accédez à toutes nos formations avec un accompagnement personnalisé et des ressources exclusives.</p>
-                            <div class="mb-6">
-                                <span class="text-3xl font-bold text-gray-800">$129</span>
-                                <span class="text-gray-500">/ pack complet</span>
+                    <div class="bg-white rounded-xl overflow-hidden shadow-sm mobile-card">
+                        <div class="bg-yellow-500 h-2"></div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">Séance Coaching</h3>
+                            <p class="text-gray-600 text-sm mb-5">Profitez d'une séance individuelle pour atteindre vos objectifs plus rapidement.</p>
+                            <div class="mb-5">
+                                <span class="text-2xl font-bold text-gray-800">$20</span>
+                                <span class="text-gray-500 text-sm">/ séance</span>
                             </div>
-                            <a href="#contact" class="block w-full bg-yellow-600 hover:bg-yellow-700 text-white text-center py-3 rounded-lg font-medium transition duration-300">
-                                Acheter maintenant
+                            <a href="#contact" class="block w-full bg-yellow-600 hover:bg-yellow-700 text-white text-center py-2.5 rounded-lg font-medium text-sm transition duration-300 active:scale-95">
+                                Réserver maintenant
                             </a>
                         </div>
                     </div>
                 </div>
                 
-                <div class="text-center mt-16">
-                    <p class="text-gray-600 mb-8">Toutes nos formations incluent un accès à vie, des mises à jour gratuites et un support en français.</p>
-                    <a href="#contact" class="inline-flex items-center bg-gray-800 hover:bg-black text-white px-8 py-4 rounded-lg font-bold text-lg transition duration-300 shadow-lg">
-                        <i class="fas fa-graduation-cap mr-3"></i> Voir toutes les formations
+                <div class="text-center mt-10">
+                    <a href="#contact" class="inline-flex items-center bg-gray-800 hover:bg-black text-white px-6 py-3 rounded-lg font-semibold text-sm transition duration-300 shadow-sm active:scale-95">
+                        <i class="fas fa-graduation-cap mr-2"></i> Voir toutes les formations
                     </a>
                 </div>
             </div>
         </section>
         
         <!-- Section Coaching -->
-        <section id="coaching" class="py-16 md:py-24 bg-white">
-            <div class="container mx-auto px-4">
-                <div class="flex flex-col lg:flex-row items-center">
-                    <div class="lg:w-1/2 mb-12 lg:mb-0">
-                        <h2 class="text-3xl md:text-4xl font-bold mb-6 font-heading text-gray-800">Coaching Personnalisé pour Votre Succès</h2>
-                        <p class="text-xl text-gray-600 mb-8">
-                            Nos séances de coaching vous offrent un accompagnement sur mesure pour maximiser vos résultats. Que vous soyez débutant ou déjà expérimenté, nous adaptons notre approche à vos besoins spécifiques.
+        <section id="coaching" class="py-12 bg-white sm:py-16">
+            <div class="px-4">
+                <div class="flex flex-col">
+                    <div class="mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 font-heading text-gray-800">Coaching Personnalisé pour Votre Succès</h2>
+                        <p class="text-base text-gray-600 mb-6">
+                            Nos séances de coaching vous offrent un accompagnement sur mesure pour maximiser vos résultats.
                         </p>
                         
-                        <div class="space-y-6">
+                        <div class="space-y-5 mb-8">
                             <div class="flex items-start">
-                                <div class="bg-blue-100 p-3 rounded-lg mr-4">
-                                    <i class="fas fa-user-check text-blue-600 text-xl"></i>
+                                <div class="bg-blue-100 p-2.5 rounded-lg mr-3 flex-shrink-0">
+                                    <i class="fas fa-user-check text-blue-600"></i>
                                 </div>
                                 <div>
-                                    <h3 class="text-lg font-bold text-gray-800 mb-1">Analyse Personnalisée</h3>
-                                    <p class="text-gray-600">Nous évaluons votre situation actuelle et définissons ensemble vos objectifs financiers.</p>
+                                    <h3 class="text-base font-bold text-gray-800 mb-1">Analyse Personnalisée</h3>
+                                    <p class="text-gray-600 text-sm">Nous évaluons votre situation et définissons vos objectifs financiers.</p>
                                 </div>
                             </div>
                             
                             <div class="flex items-start">
-                                <div class="bg-green-100 p-3 rounded-lg mr-4">
-                                    <i class="fas fa-road text-green-600 text-xl"></i>
+                                <div class="bg-green-100 p-2.5 rounded-lg mr-3 flex-shrink-0">
+                                    <i class="fas fa-road text-green-600"></i>
                                 </div>
                                 <div>
-                                    <h3 class="text-lg font-bold text-gray-800 mb-1">Plan d'Action Concret</h3>
-                                    <p class="text-gray-600">Nous élaborons une stratégie étape par étape adaptée à votre profil et à vos ressources.</p>
+                                    <h3 class="text-base font-bold text-gray-800 mb-1">Plan d'Action Concret</h3>
+                                    <p class="text-gray-600 text-sm">Nous élaborons une stratégie étape par étape adaptée à votre profil.</p>
                                 </div>
                             </div>
                             
                             <div class="flex items-start">
-                                <div class="bg-purple-100 p-3 rounded-lg mr-4">
-                                    <i class="fas fa-chart-bar text-purple-600 text-xl"></i>
+                                <div class="bg-purple-100 p-2.5 rounded-lg mr-3 flex-shrink-0">
+                                    <i class="fas fa-chart-bar text-purple-600"></i>
                                 </div>
                                 <div>
-                                    <h3 class="text-lg font-bold text-gray-800 mb-1">Suivi des Résultats</h3>
-                                    <p class="text-gray-600">Nous analysons régulièrement vos progrès et ajustons la stratégie si nécessaire.</p>
+                                    <h3 class="text-base font-bold text-gray-800 mb-1">Suivi des Résultats</h3>
+                                    <p class="text-gray-600 text-sm">Nous analysons vos progrès et ajustons la stratégie si nécessaire.</p>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="mt-10">
-                            <a href="#contact" class="inline-flex items-center bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600 text-white px-8 py-4 rounded-lg font-bold text-lg transition duration-300 shadow-lg">
-                                <i class="fas fa-calendar-check mr-3"></i> Réserver une séance de coaching
+                        <div>
+                            <a href="#contact" class="inline-flex items-center bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600 text-white px-6 py-3 rounded-lg font-semibold text-sm transition duration-300 shadow-sm active:scale-95">
+                                <i class="fas fa-calendar-check mr-2"></i> Réserver une séance
                             </a>
                         </div>
                     </div>
                     
-                    <div class="lg:w-1/2 lg:pl-16">
-                        <!-- Placeholder pour image/vidéo coaching -->
-                        <div class="bg-gradient-to-br from-blue-50 to-green-50 rounded-2xl p-8 shadow-xl">
-                            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                                <h3 class="text-xl font-bold text-gray-800 mb-4">Témoignage Client</h3>
+                    <div>
+                        <!-- Témoignage Client -->
+                        <div class="bg-gradient-to-br from-blue-50 to-green-50 rounded-xl p-6 shadow-sm">
+                            <div class="bg-white rounded-lg shadow-sm p-5 mb-6">
+                                <h3 class="text-lg font-bold text-gray-800 mb-4">Témoignage Client</h3>
                                 <div class="flex items-start mb-4">
-                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                                        <i class="fas fa-user text-blue-600 text-xl"></i>
+                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                        <i class="fas fa-user text-blue-600"></i>
                                     </div>
                                     <div>
-                                        <p class="font-bold text-gray-800">Jean-Pierre L.</p>
-                                        <p class="text-gray-600 text-sm">Participant au coaching, Haïti</p>
+                                        <p class="font-bold text-gray-800 text-sm">Jean-Pierre L.</p>
+                                        <p class="text-gray-600 text-xs">Participant au coaching, Haïti</p>
                                     </div>
                                 </div>
-                                <p class="text-gray-700 italic">
-                                    "Grâce au coaching Digital Money, j'ai pu générer mes premiers revenus en ligne en seulement 3 mois. L'accompagnement personnalisé m'a permis d'éviter les erreurs courantes et de me concentrer sur ce qui fonctionne vraiment."
+                                <p class="text-gray-700 italic text-sm">
+                                    "Grâce au coaching Digital Money, j'ai pu générer mes premiers revenus en ligne en seulement 3 mois."
                                 </p>
                             </div>
                             
-                            <div class="grid grid-cols-2 gap-6">
-                                <div class="bg-white rounded-xl p-6 text-center shadow-md">
-                                    <div class="text-3xl font-bold text-blue-600 mb-2">95%</div>
-                                    <p class="text-gray-700 font-medium">Satisfaction clients</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-white rounded-lg p-4 text-center shadow-sm">
+                                    <div class="text-2xl font-bold text-blue-600 mb-1">95%</div>
+                                    <p class="text-gray-700 font-medium text-xs">Satisfaction clients</p>
                                 </div>
-                                <div class="bg-white rounded-xl p-6 text-center shadow-md">
-                                    <div class="text-3xl font-bold text-green-600 mb-2">+40%</div>
-                                    <p class="text-gray-700 font-medium">Augmentation revenus moyen</p>
+                                <div class="bg-white rounded-lg p-4 text-center shadow-sm">
+                                    <div class="text-2xl font-bold text-green-600 mb-1">+40%</div>
+                                    <p class="text-gray-700 font-medium text-xs">Augmentation revenus</p>
                                 </div>
                             </div>
                         </div>
@@ -510,101 +940,74 @@
         </section>
         
         <!-- Section Contact -->
-        <section id="contact" class="py-16 md:py-24 bg-gray-800 text-white">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4 font-heading">Contactez Digital Money</h2>
-                    <p class="text-xl text-gray-300 max-w-3xl mx-auto">Prêt à transformer votre vie financière? Contactez-nous pour discuter de vos objectifs et découvrir comment nous pouvons vous aider.</p>
+        <section id="contact" class="py-12 bg-gray-800 text-white sm:py-16">
+            <div class="px-4">
+                <div class="text-center mb-10">
+                    <h2 class="text-2xl sm:text-3xl font-bold mb-3 font-heading">Contactez Digital Money</h2>
+                    <p class="text-base text-gray-300 max-w-xl mx-auto mobile-text-balance">
+                        Prêt à transformer votre vie financière? Contactez-nous pour discuter de vos objectifs.
+                    </p>
                 </div>
                 
-                <div class="flex flex-col lg:flex-row">
-                    <div class="lg:w-1/2 mb-12 lg:mb-0 lg:pr-12">
-                        <div class="bg-gray-900 rounded-2xl p-8 shadow-xl">
-                            <h3 class="text-2xl font-bold mb-6 font-heading">Informations de Contact</h3>
+                <div class="flex flex-col">
+                    <div class="mb-8">
+                        <div class="bg-gray-900 rounded-xl p-6 shadow-sm">
+                            <h3 class="text-xl font-bold mb-5 font-heading">Informations de Contact</h3>
                             
-                            <div class="space-y-6">
+                            <div class="space-y-5">
                                 <div class="flex items-start">
-                                    <div class="bg-blue-600 p-3 rounded-lg mr-4">
+                                    <div class="bg-blue-600 p-2.5 rounded-lg mr-3 flex-shrink-0">
                                         <i class="fas fa-envelope text-white"></i>
                                     </div>
                                     <div>
-                                        <h4 class="text-lg font-bold mb-1">Email</h4>
-                                        <a href="mailto:marlinep39@gmail.com" class="text-gray-300 hover:text-white transition duration-300">marlinep39@gmail.com</a>
+                                        <h4 class="text-base font-bold mb-1">Email</h4>
+                                        <a href="mailto:marlinep39@gmail.com" class="text-gray-300 hover:text-white transition duration-300 text-sm">marlinep39@gmail.com</a>
                                     </div>
                                 </div>
                                 
                                 <div class="flex items-start">
-                                    <div class="bg-green-600 p-3 rounded-lg mr-4">
+                                    <div class="bg-green-600 p-2.5 rounded-lg mr-3 flex-shrink-0">
                                         <i class="fas fa-phone text-white"></i>
                                     </div>
                                     <div>
-                                        <h4 class="text-lg font-bold mb-1">Téléphone</h4>
-                                        <a href="tel:+50941382430" class="text-gray-300 hover:text-white transition duration-300">+509 4138 2430</a>
+                                        <h4 class="text-base font-bold mb-1">Téléphone</h4>
+                                        <a href="tel:+50941382430" class="text-gray-300 hover:text-white transition duration-300 text-sm">+509 4138 2430</a>
                                     </div>
                                 </div>
                                 
                                 <div class="flex items-start">
-                                    <div class="bg-purple-600 p-3 rounded-lg mr-4">
+                                    <div class="bg-purple-600 p-2.5 rounded-lg mr-3 flex-shrink-0">
                                         <i class="fas fa-map-marker-alt text-white"></i>
                                     </div>
                                     <div>
-                                        <h4 class="text-lg font-bold mb-1">Adresse</h4>
-                                        <p class="text-gray-300">Haïti</p>
+                                        <h4 class="text-base font-bold mb-1">Adresse</h4>
+                                        <p class="text-gray-300 text-sm">Haïti</p>
                                     </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-10 pt-8 border-t border-gray-700">
-                                <h4 class="text-xl font-bold mb-4">Suivez-nous</h4>
-                                <div class="flex space-x-4">
-                                    <a href="#" class="bg-gray-700 hover:bg-blue-600 w-12 h-12 rounded-full flex items-center justify-center transition duration-300">
-                                        <i class="fab fa-facebook-f"></i>
-                                    </a>
-                                    <a href="#" class="bg-gray-700 hover:bg-blue-400 w-12 h-12 rounded-full flex items-center justify-center transition duration-300">
-                                        <i class="fab fa-twitter"></i>
-                                    </a>
-                                    <a href="#" class="bg-gray-700 hover:bg-pink-600 w-12 h-12 rounded-full flex items-center justify-center transition duration-300">
-                                        <i class="fab fa-instagram"></i>
-                                    </a>
-                                    <a href="#" class="bg-gray-700 hover:bg-blue-700 w-12 h-12 rounded-full flex items-center justify-center transition duration-300">
-                                        <i class="fab fa-linkedin-in"></i>
-                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="lg:w-1/2">
-                        <div class="bg-gray-900 rounded-2xl p-8 shadow-xl">
-                            <h3 class="text-2xl font-bold mb-6 font-heading">Envoyez-nous un message</h3>
+                    <div>
+                        <div class="bg-gray-900 rounded-xl p-6 shadow-sm">
+                            <h3 class="text-xl font-bold mb-5 font-heading">Envoyez-nous un message</h3>
                             <form id="contactForm">
-                                <div class="mb-6">
-                                    <label for="name" class="block text-gray-300 mb-2">Nom complet</label>
-                                    <input type="text" id="name" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="Votre nom">
+                                <div class="mb-4">
+                                    <label for="name" class="block text-gray-300 mb-1 text-sm">Nom complet</label>
+                                    <input type="text" id="name" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 text-base" placeholder="Votre nom">
                                 </div>
                                 
-                                <div class="mb-6">
-                                    <label for="email" class="block text-gray-300 mb-2">Adresse email</label>
-                                    <input type="email" id="email" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="votre@email.com">
+                                <div class="mb-4">
+                                    <label for="email" class="block text-gray-300 mb-1 text-sm">Adresse email</label>
+                                    <input type="email" id="email" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 text-base" placeholder="votre@email.com">
                                 </div>
                                 
-                                <div class="mb-6">
-                                    <label for="service" class="block text-gray-300 mb-2">Service intéressé</label>
-                                    <select id="service" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                        <option value="">Sélectionnez un service</option>
-                                        <option value="affiliation">Marketing d'affiliation</option>
-                                        <option value="ebooks">eBooks & Formations</option>
-                                        <option value="coaching">Séances de coaching</option>
-                                        <option value="pack">Pack complet</option>
-                                    </select>
+                                <div class="mb-4">
+                                    <label for="message" class="block text-gray-300 mb-1 text-sm">Message</label>
+                                    <textarea id="message" rows="4" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 text-base" placeholder="Décrivez vos objectifs..."></textarea>
                                 </div>
                                 
-                                <div class="mb-6">
-                                    <label for="message" class="block text-gray-300 mb-2">Message</label>
-                                    <textarea id="message" rows="5" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="Décrivez vos objectifs et questions..."></textarea>
-                                </div>
-                                
-                                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600 text-white font-bold py-4 rounded-lg transition duration-300 shadow-lg">
+                                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600 text-white font-bold py-3.5 rounded-lg transition duration-300 shadow-sm active:scale-95">
                                     Envoyer le message
                                 </button>
                             </form>
@@ -615,137 +1018,340 @@
         </section>
         
         <!-- Footer -->
-        <footer class="bg-gray-900 text-white py-12">
-            <div class="container mx-auto px-4">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <div class="mb-8 md:mb-0">
+        <footer class="bg-gray-900 text-white py-8">
+            <div class="px-4">
+                <div class="flex flex-col">
+                    <div class="mb-6">
                         <div class="flex items-center mb-4">
-                            <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                                <span class="text-white font-bold text-xl">DM</span>
+                            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-2">
+                                <span class="text-white font-bold">DM</span>
                             </div>
-                            <span class="text-2xl font-bold font-heading">Digital Money</span>
+                            <span class="text-xl font-bold font-heading">Digital Money</span>
                         </div>
-                        <p class="text-gray-400 max-w-md">Plateforme d'éducation financière et de développement de revenus en ligne pour les Haïtiens et francophones du monde entier.</p>
+                        <p class="text-gray-400 text-sm">
+                            Plateforme d'éducation financière et de développement de revenus en ligne.
+                        </p>
                     </div>
                     
-                    <div class="text-center md:text-right">
-                        <p class="text-gray-400 mb-2">© 2025 Digital Money. Tous droits réservés.</p>
-                        <p class="text-gray-400">Conçu avec <i class="fas fa-heart text-red-500 mx-1"></i> pour votre réussite financière</p>
-                    </div>
-                </div>
-                
-                <div class="mt-12 pt-8 border-t border-gray-800 text-center">
-                    <div class="flex flex-wrap justify-center space-x-6 text-gray-400">
-                        <a href="#accueil" class="hover:text-white mb-2">Accueil</a>
-                        <a href="#services" class="hover:text-white mb-2">Services</a>
-                        <a href="#formations" class="hover:text-white mb-2">Formations</a>
-                        <a href="#coaching" class="hover:text-white mb-2">Coaching</a>
-                        <a href="#contact" class="hover:text-white mb-2">Contact</a>
-                        <a href="#" class="hover:text-white mb-2">Mentions légales</a>
-                        <a href="#" class="hover:text-white mb-2">Politique de confidentialité</a>
+                    <div class="text-center">
+                        <p class="text-gray-400 text-xs mb-4">© 2025 Digital Money. Tous droits réservés.</p>
+                        <div class="flex flex-wrap justify-center space-x-4 text-gray-400 text-xs">
+                            <a href="#accueil" class="hover:text-white">Accueil</a>
+                            <a href="#services" class="hover:text-white">Services</a>
+                            <a href="#formations" class="hover:text-white">Formations</a>
+                            <a href="#coaching" class="hover:text-white">Coaching</a>
+                            <a href="#contact" class="hover:text-white">Contact</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </footer>
     </div>
 
-    <!-- Scripts JavaScript -->
+    <!-- Scripts JavaScript optimisés mobile -->
     <script>
-        // Animation du splash screen avec Anime.js
+        // Animation du splash screen
         document.addEventListener('DOMContentLoaded', function() {
-            // Animation du splash screen
             const splashScreen = document.getElementById('splashScreen');
             const mainContent = document.getElementById('mainContent');
             
-            // Animation d'entrée du splash screen
+            // Animation plus rapide sur mobile (2.5s au lieu de 3s)
+            const splashDuration = window.innerWidth < 768 ? 2500 : 3000;
+            
+            // Animation d'entrée
             anime({
                 targets: '#splashScreen',
                 opacity: [0, 1],
-                duration: 800,
+                duration: 500,
                 easing: 'easeInOutQuad'
             });
             
-            // Animation du logo dans le splash screen
+            // Animation du logo
             anime({
-                targets: '#splashScreen .rounded-2xl',
+                targets: '#splashScreen .rounded-xl',
                 scale: [0.8, 1],
                 rotate: [0, 360],
-                duration: 1500,
+                duration: 1200,
                 easing: 'easeOutElastic(1, .5)',
-                delay: 300
+                delay: 200
             });
             
-            // Animation du texte dans le splash screen
+            // Animation du texte
             anime({
                 targets: '#splashScreen h1, #splashScreen p',
-                translateY: [20, 0],
+                translateY: [15, 0],
                 opacity: [0, 1],
-                duration: 1000,
-                delay: anime.stagger(200),
+                duration: 800,
+                delay: anime.stagger(150),
                 easing: 'easeOutQuad'
             });
             
-            // Disparition du splash screen après 3 secondes
+            // Disparition du splash screen
             setTimeout(function() {
                 anime({
                     targets: '#splashScreen',
                     opacity: 0,
                     scale: 0.95,
-                    duration: 800,
+                    duration: 600,
                     easing: 'easeInOutQuad',
                     complete: function() {
                         splashScreen.style.display = 'none';
                         mainContent.classList.remove('content-hidden');
                         mainContent.classList.add('content-visible');
                         
-                        // Animation d'entrée du contenu principal
                         anime({
                             targets: '#mainContent',
                             opacity: [0, 1],
-                            duration: 600,
+                            duration: 500,
                             easing: 'easeInOutQuad'
                         });
                     }
                 });
-            }, 3000);
+            }, splashDuration);
             
-            // Gestion du menu burger mobile
+            // Gestion du menu mobile
             const menuToggle = document.getElementById('menuToggle');
             const mobileMenu = document.getElementById('mobileMenu');
             let menuOpen = false;
             
-            menuToggle.addEventListener('click', function() {
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
                 if (!menuOpen) {
                     mobileMenu.classList.remove('menu-closed');
                     mobileMenu.classList.add('menu-open');
-                    menuToggle.innerHTML = '<i class="fas fa-times text-2xl"></i>';
+                    menuToggle.innerHTML = '<i class="fas fa-times text-xl"></i>';
                     menuOpen = true;
+                    document.body.style.overflow = 'hidden';
                 } else {
-                    mobileMenu.classList.remove('menu-open');
-                    mobileMenu.classList.add('menu-closed');
-                    menuToggle.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
-                    menuOpen = false;
+                    closeMobileMenu();
                 }
             });
             
-            // Fermeture du menu mobile au clic sur un lien
+            // Fermer le menu en cliquant à l'extérieur
+            document.addEventListener('click', function(e) {
+                if (menuOpen && !mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Fermer le menu en scrollant
+            window.addEventListener('scroll', function() {
+                if (menuOpen) {
+                    closeMobileMenu();
+                }
+            });
+            
+            function closeMobileMenu() {
+                mobileMenu.classList.remove('menu-open');
+                mobileMenu.classList.add('menu-closed');
+                menuToggle.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+                menuOpen = false;
+                document.body.style.overflow = 'auto';
+            }
+            
+            // Fermer le menu au clic sur un lien
             const mobileLinks = document.querySelectorAll('#mobileMenu a');
             mobileLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    mobileMenu.classList.remove('menu-open');
-                    mobileMenu.classList.add('menu-closed');
-                    menuToggle.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
-                    menuOpen = false;
+                link.addEventListener('click', closeMobileMenu);
+            });
+            
+            // Gestion de la modale d'inscription
+            const modal = document.getElementById('inscriptionModal');
+            const openBtn = document.getElementById('openInscriptionModal');
+            const closeBtn = document.getElementById('closeModal');
+            const form = document.getElementById('inscriptionForm');
+            
+            // Ouvrir la modale
+            openBtn.addEventListener('click', function() {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+                
+                // Animation d'entrée
+                anime({
+                    targets: modal.children[0],
+                    translateY: [50, 0],
+                    opacity: [0, 1],
+                    duration: 300,
+                    easing: 'easeOutQuad'
                 });
             });
             
-            // Animation des sections au scroll
+            // Fermer la modale
+            closeBtn.addEventListener('click', closeModal);
+            
+            // Fermer en cliquant à l'extérieur
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+            
+            // Fermer avec la touche Échap
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+            
+            function closeModal() {
+                anime({
+                    targets: modal.children[0],
+                    translateY: [0, 50],
+                    opacity: [1, 0],
+                    duration: 200,
+                    easing: 'easeInQuad',
+                    complete: function() {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
+            
+            // Gestion de l'affichage des détails d'expérience
+            const onlineExperienceRadios = document.querySelectorAll('input[name="onlineExperience"]');
+            const experienceDetails = document.getElementById('experienceDetails');
+            
+            onlineExperienceRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'Oui') {
+                        experienceDetails.classList.remove('hidden');
+                        document.getElementById('experienceText').required = true;
+                    } else {
+                        experienceDetails.classList.add('hidden');
+                        document.getElementById('experienceText').required = false;
+                    }
+                });
+            });
+            
+            // Initialiser la date d'aujourd'hui
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            document.getElementById('date').value = formattedDate;
+            
+            // Soumission du formulaire d'inscription
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Récupérer les données principales
+                const fullName = document.getElementById('fullName').value;
+                const whatsapp = document.getElementById('whatsapp').value;
+                const email = document.getElementById('email').value;
+                
+                // Construire le message WhatsApp simplifié pour mobile
+                let whatsappMessage = `*📋 INSCRIPTION DIGITAL MONEY*%0A%0A`;
+                whatsappMessage += `👤 *Nom:* ${fullName}%0A`;
+                whatsappMessage += `📱 *WhatsApp:* ${whatsapp}%0A`;
+                whatsappMessage += `📧 *Email:* ${email}%0A`;
+                whatsappMessage += `📅 *Date:* ${new Date().toLocaleDateString('fr-FR')}%0A%0A`;
+                whatsappMessage += `_Formulaire d'inscription complété. Contactez-moi pour les prochaines étapes._`;
+                
+                // Animation du bouton
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Préparation...';
+                submitBtn.disabled = true;
+                
+                // Redirection vers WhatsApp après un délai
+                setTimeout(() => {
+                    const phoneNumber = '509941382430';
+                    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${whatsappMessage}`;
+                    
+                    // Ouvrir WhatsApp
+                    window.open(whatsappUrl, '_blank');
+                    
+                    // Réinitialiser le bouton
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                        form.reset();
+                        closeModal();
+                        
+                        // Notification de confirmation
+                        if ('Notification' in window && Notification.permission === 'granted') {
+                            new Notification('Inscription envoyée!', {
+                                body: 'Vérifiez WhatsApp pour finaliser.',
+                                icon: 'digitallogo.png'
+                            });
+                        }
+                    }, 1000);
+                }, 1500);
+            });
+            
+            // Gestion du formulaire de contact
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const submitBtn = contactForm.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.textContent;
+                    
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Envoi...';
+                    submitBtn.disabled = true;
+                    
+                    // Simulation d'envoi
+                    setTimeout(function() {
+                        submitBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Envoyé!';
+                        submitBtn.style.background = 'linear-gradient(to right, #10b981, #059669)';
+                        
+                        setTimeout(function() {
+                            contactForm.reset();
+                            submitBtn.textContent = originalText;
+                            submitBtn.disabled = false;
+                            submitBtn.style.background = 'linear-gradient(to right, #3b82f6, #10b981)';
+                        }, 2000);
+                    }, 1000);
+                });
+            }
+            
+            // Smooth scrolling pour les ancres
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        e.preventDefault();
+                        const offset = 70;
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - offset;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Optimisation du scroll pour mobile
+            let lastScrollTop = 0;
+            const header = document.querySelector('header');
+            
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    // Scroll vers le bas
+                    header.style.transform = 'translateY(-100%)';
+                } else {
+                    // Scroll vers le haut
+                    header.style.transform = 'translateY(0)';
+                }
+                
+                lastScrollTop = scrollTop;
+            });
+            
+            // Animation des éléments au scroll
             const animateOnScroll = function() {
-                const elements = document.querySelectorAll('.card-hover, .animate-fade-in, .animate-slide-up');
+                const elements = document.querySelectorAll('.mobile-card, .animate-fade-in, .animate-slide-up');
                 
                 elements.forEach(element => {
                     const elementPosition = element.getBoundingClientRect().top;
-                    const screenPosition = window.innerHeight / 1.2;
+                    const screenPosition = window.innerHeight / 1.1;
                     
                     if (elementPosition < screenPosition) {
                         element.style.opacity = '1';
@@ -754,81 +1360,23 @@
                 });
             };
             
-            // Initialiser les animations
             window.addEventListener('scroll', animateOnScroll);
-            // Appeler une fois au chargement pour les éléments déjà visibles
             animateOnScroll();
             
-            // Gestion du formulaire de contact
-            const contactForm = document.getElementById('contactForm');
-            contactForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Animation de soumission
-                const submitBtn = contactForm.querySelector('button[type="submit"]');
-                const originalText = submitBtn.textContent;
-                
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Envoi en cours...';
-                submitBtn.disabled = true;
-                
-                // Simulation d'envoi (à remplacer par un vrai appel API)
-                setTimeout(function() {
-                    submitBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Message envoyé!';
-                    submitBtn.style.background = 'linear-gradient(to right, #10b981, #059669)';
-                    
-                    // Réinitialiser le formulaire
-                    setTimeout(function() {
-                        contactForm.reset();
-                        submitBtn.textContent = originalText;
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                        submitBtn.style.background = 'linear-gradient(to right, #3b82f6, #10b981)';
-                        
-                        // Notification de succès
-                        alert('Merci! Votre message a été envoyé. Nous vous répondrons dans les plus brefs délais.');
-                    }, 2000);
-                }, 1500);
-            });
-            
-            // Animation des cartes au survol
-            const cards = document.querySelectorAll('.card-hover');
-            cards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    anime({
-                        targets: this,
-                        scale: 1.02,
-                        duration: 300,
-                        easing: 'easeOutQuad'
-                    });
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    anime({
-                        targets: this,
-                        scale: 1,
-                        duration: 300,
-                        easing: 'easeOutQuad'
-                    });
-                });
-            });
-            
-            // Smooth scrolling pour les ancres
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
+            // Prévenir le zoom sur les inputs iOS
+            if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+                document.addEventListener('focus', function(e) {
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+                        document.body.style.zoom = '0.9999';
                     }
-                });
-            });
+                }, true);
+                
+                document.addEventListener('blur', function(e) {
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+                        document.body.style.zoom = '1';
+                    }
+                }, true);
+            }
         });
     </script>
 </body>
